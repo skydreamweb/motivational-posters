@@ -1,13 +1,13 @@
 <template>
   <q-page class="flex flex-center">
-  
-    <input type="file" @change="fileUpload">
-    <img
-      v-for="img in images"
-      :key="img.id"
-      :src="img.src"
-      @click="selectImageHandler(img)"
-    >
+    <div>
+      <h3>Please upload your image</h3>
+      <input type="file" @change="fileUpload" />
+    </div>
+    <div v-for="img in images" :key="img.id" class="images">
+      <q-checkbox toggle-indeterminate="false" v-model="img.checked" />
+      <img type="checkbox" :src="img.src" @click="selectImageHandler(img)" />
+    </div>
   </q-page>
 </template>
 
@@ -17,46 +17,58 @@ export default {
   data() {
     return {
       model: null,
-      images: []
+      images: [],
+      checked: null
     };
   },
-methods: {
+  methods: {
     fileUpload(event) {
-      const reader = new FileReader()
-      reader.addEventListener('load', () => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
         // create unique name
-        let id = 0
-        let images = JSON.parse(localStorage.getItem('images'))
+        let id = 0;
+        let images = JSON.parse(localStorage.getItem("images"));
         if (images && images.length > 0) {
-          id = Number(images[images.length - 1].id) + 1
+          id = Number(images[images.length - 1].id) + 1;
         }
-        let name = 'img-' + id
+        let name = "img-" + id;
 
         // push image in array
-        this.images.push({ id, name, src: reader.result })
+        this.images.push({ id, name, src: reader.result });
 
         // put array in localstorage
-        localStorage.setItem('images', JSON.stringify(this.images))
-      })
-      reader.readAsDataURL(event.target.files[0])
+        localStorage.setItem("images", JSON.stringify(this.images));
+      });
+      reader.readAsDataURL(event.target.files[0]);
     },
     // get info about image on click
     selectImageHandler(img) {
-      console.log(img)
+      console.log(img);
     },
+    deleteImage() {}
   },
   created() {
     // load data from localstorage after reload component
-    let images = []
-    images = JSON.parse(localStorage.getItem('images'))
-      ? JSON.parse(localStorage.getItem('images'))
-      : []
+    let images = [];
+    images = JSON.parse(localStorage.getItem("images"))
+      ? JSON.parse(localStorage.getItem("images"))
+      : [];
 
     if (images.length > 0) {
       images.forEach(image => {
-        this.images.push(image)
-      })
+        this.images.push(image);
+      });
     }
-  },
+  }
 };
 </script>
+<style scoped>
+.images {
+  display: flex;
+  flex-wrap: wrap;
+}
+.images img {
+  width: 25%;
+  height: auto;
+}
+</style>
