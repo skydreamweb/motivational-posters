@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -59,7 +59,7 @@ const linksData = [
     title: 'Create Poster',
     caption: 'Add New Poster',
     icon: 'face',
-    link: '/posters'
+    link: '/create'
   },
   {
     title: 'Poster Albums',
