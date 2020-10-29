@@ -6,7 +6,12 @@
       <button @click="createAlbum">Create album</button>
     </div>
     <div>
-      <button @click="deleteAlbums">Delete</button>
+      <div class="row inline">
+        <button @click="deleteAlbums">Delete album</button>
+      </div>
+      <div>
+        <button @click="addPoster">Add poster to album</button>
+      </div>
     </div>
     <q-list class="flex" bordered padding>
       <q-separator spaced />
@@ -18,6 +23,7 @@
             v-model="check"
             :val="album"
             :check="album"
+            :checked="checked"
           />
         </q-item-section>
 
@@ -29,16 +35,16 @@
       <q-separator spaced />
     </q-list>
     <q-separator spaced />
-    <list-posters v-on:posterChecked="posterCheck"></list-posters>
+    <list-posters v-on:postersChecked="hello"></list-posters>
   </div>
 </template>
 
 <script>
-import ListPosters from '../components/ListPosters'
+import ListPosters from "../components/ListPosters";
 export default {
   name: "Create",
   components: {
-      ListPosters
+    ListPosters
   },
   data() {
     return {
@@ -47,30 +53,38 @@ export default {
       albums: [],
       albumName: "",
       check: [],
-      postersChecked: []
+      checked: false,
+      selectedPosters: null
     };
   },
   methods: {
-      posterCheck(img){
-          let vm = this;
-          console.log("this is img", img);
-          let filterCh = this.postersChecked;
-          let compare = img;
-          filterCh.forEach(image => {
-              console.log("this is image ", image);
-              if (image == compare) {
-                  return
-              }else {
-                  console.log("Nema ga");
-                  console.log(img);
-                  vm.postersChecked.push(img)
-              }
-          })
+    hello(postersCheck) {
+      this.selectedPosters = postersCheck;
+      console.log(postersCheck);
+    },
+    addPoster() {
+      console.log(this.selectedPosters);
+    },
+    posterCheck(img) {
+      let vm = this;
+      console.log("this is img", img);
+      let filterCh = this.postersChecked;
+      let compare = img;
+      filterCh.forEach(image => {
+        console.log("this is image ", image);
+        if (image == compare) {
+          return;
+        } else {
+          console.log("Nema ga");
+          console.log(img);
+          vm.postersChecked.push(img);
+        }
+      });
 
-          console.log(this.postersChecked);
-      },
+      console.log(this.postersChecked);
+    },
     createAlbum() {
-      // let name = this.albumName;
+      console.log(this.postersChecked);
       let id = 0;
       let allAlbums = JSON.parse(localStorage.getItem("albums"));
 
@@ -79,8 +93,8 @@ export default {
         id = Number(allAlbums[allAlbums.length - 1].id) + 1;
       }
       let name = this.albumName;
-
-      this.albums.push({ id, name });
+      let checked = this.checked;
+      this.albums.push({ id, name, checked });
       console.log(this.albums);
       localStorage.setItem("albums", JSON.stringify(this.albums));
     },
@@ -94,7 +108,7 @@ export default {
       const results = albumsToDelete.filter(
         ({ id: id1 }) => !toDelete.some(({ id: id2 }) => id2 === id1)
       );
-    // reset checked albums
+      // reset checked albums
       this.check = [];
       this.albums = results;
 

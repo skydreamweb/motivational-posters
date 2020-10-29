@@ -3,30 +3,34 @@
     <q-list class="flex" bordered padding>
       <q-item v-ripple>
         <div class="container row">
-          <div v-for="img in images" :key="img.id" class="images col-3 poster-list">
-               <q-checkbox
-            indeterminate-value="false"
-            v-model="check"
-            :val="img.id"
-            :check="img"
-             @click.native="status(img)"
-          />
-              <div class="inner">
-            <img :src="img.src" @click="selectImageHandler(img)" />
-            <div class="lable">
-              <label for="checkbox">{{ title }}</label>
-              <label for="checkbox">{{ subtitle }}</label>
-            </div>
+          <div
+            v-for="img in images"
+            :key="img.id"
+            class="images col-3 poster-list"
+          >
+            <q-checkbox
+              indeterminate-value="false"
+              v-model="checkedIds"
+              :checked="checked"
+              :val="img.id"
+              :check="img"
+              @click.native="status()"
+            />
+            <div class="inner">
+              <img :src="img.src" @click="selectImageHandler(img)" />
+              <div class="lable">
+                <label for="checkbox">{{ img.title }}</label>
+                <label for="checkbox">{{ img.subtitle }}</label>
               </div>
+            </div>
             <div class="text">
               <div class="button">
                 <button @click="deleteImage(img)" class="" separator>
                   Delete
                 </button>
-                <button @click="addPoster(img)">Add</button>
+                
               </div>
             </div>
-
           </div>
         </div>
       </q-item>
@@ -45,14 +49,18 @@ export default {
       subtitle: "",
       images: [],
       src: "",
-      check: [],
-      val: "",
+      checked: false,
+      checkedIds: [],
     };
   },
   methods: {
-      status(img){
-          this.$emit('posterChecked', img)
-      },
+   status() {
+      let selectedImages = this.images.filter(image =>
+        this.checkedIds.includes(image.id)
+      );
+      console.log(selectedImages);
+      this.$emit("postersChecked", selectedImages);
+    },
     // get info about image on click
     selectImageHandler(img) {
       console.log(img);
@@ -68,11 +76,11 @@ export default {
       this.images.push(returnedTarget);
 
       // place array in localstorage
-      l, ocalStorage.setItem("posters", JSON.stringify(this.images));
+      localStorage.setItem("posters", JSON.stringify(this.images));
     },
     deleteImage(img) {
       // colect "images" key from localstorage
-      let imagesToDelete = JSON.parse(localStorage.getItem("images"));
+      let imagesToDelete = JSON.parse(localStorage.getItem("posters"));
 
       // filter array & remove clicked
       var filteredImages = imagesToDelete.filter(
@@ -83,13 +91,13 @@ export default {
       this.images = filteredImages;
 
       // place filtered array to localstorage
-      localStorage.setItem("images", JSON.stringify(filteredImages));
+      localStorage.setItem("posters", JSON.stringify(filteredImages));
     }
   },
   created() {
     let posters = [];
-    posters = JSON.parse(localStorage.getItem("images"))
-      ? JSON.parse(localStorage.getItem("images"))
+    posters = JSON.parse(localStorage.getItem("posters"))
+      ? JSON.parse(localStorage.getItem("posters"))
       : [];
     if (posters.length > 0) {
       posters.forEach(image => {
@@ -102,13 +110,12 @@ export default {
 
 <style lang="scss" scoped>
 .poster-list {
-    border: 1px solid black;
-    padding: 5px;
+  border: 1px solid black;
+  padding: 5px;
 }
 .poster-list img {
   width: 100%;
   height: auto;
-
 }
 .lable {
   position: absolute;

@@ -16,6 +16,7 @@
         </div>
       </div>
     </div>
+    <q-separator></q-separator>
   </q-page>
 </template>
 

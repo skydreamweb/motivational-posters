@@ -42,17 +42,17 @@ export default {
   },
   methods: {
     savePoster(img) {
-      console.log(img);
-        let motivation = {
-            title: this.title,
-            subtitle: this.subtitle
-        }
-        const returnedTarget = Object.assign(img, motivation);
-        // push image in state to array
-        this.images.push(returnedTarget);
+      let motivation = {
+        title: this.title,
+        subtitle: this.subtitle
+      };
+      const returnedTarget = Object.assign(img, motivation);
+      // push image in state to array
+      this.images.push(returnedTarget);
 
-        // place array in localstorage
-        localStorage.setItem("posters", JSON.stringify(this.images));
+      console.log(this.images);
+      // place array in localstorage
+      localStorage.setItem("posters", JSON.stringify(this.images));
     }
   }
 };
