@@ -1,15 +1,107 @@
 <template>
-    <div class="flex flex-center">
-            <h1>Create albums</h1>
+  <div class="albums">
+    <h1>Create albums</h1>
+    <div>
+      <input type="text" v-model="albumName" />
+      <button @click="createAlbum">Create album</button>
     </div>
+    <div>
+      <button @click="deleteAlbums">Delete</button>
+    </div>
+    <q-list class="flex" bordered padding>
+      <q-separator spaced />
+
+      <q-item v-ripple v-for="album in albums" :key="album.id">
+        <q-item-section side top>
+          <q-checkbox
+            indeterminate-value="false"
+            v-model="check"
+            :val="album"
+            :check="album"
+          />
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label>{{ album.name }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-separator spaced />
+    </q-list>
+    <q-separator spaced />
+    <list-posters></list-posters>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: 'Create'
+import ListPosters from '../components/ListPosters'
+export default {
+  name: "Create",
+  components: {
+      ListPosters
+  },
+  data() {
+    return {
+      id: "",
+      val: "",
+      albums: [],
+      albumName: "",
+      check: [],
+      componentKey: 0
+    };
+  },
+  methods: {
+    createAlbum() {
+      // let name = this.albumName;
+      let id = 0;
+      let allAlbums = JSON.parse(localStorage.getItem("albums"));
+
+      // random number for id
+      if (allAlbums && allAlbums.length > 0) {
+        id = Number(allAlbums[allAlbums.length - 1].id) + 1;
+      }
+      let name = this.albumName;
+
+      this.albums.push({ id, name });
+      console.log(this.albums);
+      localStorage.setItem("albums", JSON.stringify(this.albums));
+    },
+
+    deleteAlbums() {
+      // colect "albums" key from localstorage
+      let albumsToDelete = JSON.parse(localStorage.getItem("albums"));
+      let toDelete = this.check;
+
+      // filter to arrays of objects
+      const results = albumsToDelete.filter(
+        ({ id: id1 }) => !toDelete.some(({ id: id2 }) => id2 === id1)
+      );
+    // reset checked albums
+      this.check = [];
+      this.albums = results;
+
+      localStorage.setItem("albums", JSON.stringify(results));
     }
+  },
+  created() {
+    let albums = [];
+    albums = JSON.parse(localStorage.getItem("albums"))
+      ? JSON.parse(localStorage.getItem("albums"))
+      : [];
+
+    if (albums.length > 0) {
+      albums.forEach(album => {
+        this.albums.push(album);
+      });
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-
+.albums {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+}
 </style>

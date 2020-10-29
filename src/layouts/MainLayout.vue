@@ -56,7 +56,7 @@ const linksData = [
     link: '/'
   },
   {
-    title: 'Create Poster',
+    title: 'Create Albums',
     caption: 'Add New Poster',
     icon: 'face',
     link: '/create'
