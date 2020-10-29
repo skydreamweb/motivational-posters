@@ -1,23 +1,36 @@
 <template>
   <q-page class="flex">
+    <div class="poster">
+    <poster-creator :image-poster="this.singleImage"></poster-creator>
+    </div>
+    <div class="upload">
     <h3>Please upload your image</h3>
     <input type="file" @change="fileUpload" />
+    </div>
     <div class="container row">
       <div v-for="img in images" :key="img.id" class="images col-3">
         <img :src="img.src" @click="selectImageHandler(img)" />
-        <button @click="deleteImage(img)" class="button">Delete</button>
+        <div class="button">
+        <button @click="deleteImage(img)" class="" separator >Delete</button>
+        <button @click="addImage(img)">Add</button>
+        </div>
       </div>
     </div>
   </q-page>
 </template>
 
 <script>
+import PosterCreator from '../components/PosterCreator'
 export default {
   name: "PageIndex",
   data() {
     return {
-      images: []
+      images: [],
+      singleImage: null
     };
+  },
+  components: {
+    PosterCreator
   },
   methods: {
     fileUpload(event) {
@@ -41,7 +54,10 @@ export default {
       });
       reader.readAsDataURL(event.target.files[0]);
     },
-
+    addImage(img){
+      console.log(img);
+       this.singleImage = img;
+    },
     // get info about image on click
     selectImageHandler(img) {
       console.log(img);
@@ -49,11 +65,18 @@ export default {
 
     // delete image
     deleteImage(img) {
+      // colect "images" key from localstorage
       let imagesToDelete = JSON.parse(localStorage.getItem("images"));
 
-      var filteredImages = imagesToDelete.filter(e => e.id != img.id);
+      // filter array & remove clicked
+      var filteredImages = imagesToDelete.filter(
+        element => element.id != img.id
+      );
+
+      // place new filtered array to state
       this.images = filteredImages;
 
+      // place filtered array to localstorage
       localStorage.setItem("images", JSON.stringify(filteredImages));
     }
   },
@@ -71,7 +94,21 @@ export default {
   }
 };
 </script>
+
 <style scoped>
+
+.buttons {
+  display: inline;
+}
+.poster {
+  margin: 0 auto;
+}
+.container {
+  justify-content: center;
+}
+.upload {
+  margin: 3rem auto;
+}
 .images {
   display: block;
   border: 1px solid black;
