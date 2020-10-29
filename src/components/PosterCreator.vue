@@ -28,7 +28,7 @@ export default {
     return {
       title: "",
       subtitle: "",
-      image: null,
+      images: [],
       src: ""
     };
   },
@@ -42,7 +42,17 @@ export default {
   },
   methods: {
     savePoster(img) {
-        console.log(img);
+      console.log(img);
+        let motivation = {
+            title: this.title,
+            subtitle: this.subtitle
+        }
+        const returnedTarget = Object.assign(img, motivation);
+        // push image in state to array
+        this.images.push(returnedTarget);
+
+        // place array in localstorage
+        localStorage.setItem("posters", JSON.stringify(this.images));
     }
   }
 };
@@ -50,8 +60,7 @@ export default {
 
 <style lang="scss" scoped>
 .text {
-margin-top: 7rem;
-
+  margin-top: 7rem;
 }
 .box img {
   width: 596px;

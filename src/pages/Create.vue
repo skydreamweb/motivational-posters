@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-center">
-            <h1>Create poster</h1>
+            <h1>Create albums</h1>
     </div>
 </template>
 
