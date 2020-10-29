@@ -7,7 +7,7 @@
                <q-checkbox
             indeterminate-value="false"
             v-model="check"
-            :val="img"
+            :val="img.id"
             :check="img"
              @click.native="status(img)"
           />
