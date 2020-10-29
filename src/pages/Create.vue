@@ -29,7 +29,7 @@
       <q-separator spaced />
     </q-list>
     <q-separator spaced />
-    <list-posters></list-posters>
+    <list-posters v-on:posterChecked="posterCheck"></list-posters>
   </div>
 </template>
 
@@ -47,10 +47,28 @@ export default {
       albums: [],
       albumName: "",
       check: [],
-      componentKey: 0
+      postersChecked: []
     };
   },
   methods: {
+      posterCheck(img){
+          let vm = this;
+          console.log("this is img", img);
+          let filterCh = this.postersChecked;
+          let compare = img;
+          filterCh.forEach(image => {
+              console.log("this is image ", image);
+              if (image == compare) {
+                  return
+              }else {
+                  console.log("Nema ga");
+                  console.log(img);
+                  vm.postersChecked.push(img)
+              }
+          })
+
+          console.log(this.postersChecked);
+      },
     createAlbum() {
       // let name = this.albumName;
       let id = 0;

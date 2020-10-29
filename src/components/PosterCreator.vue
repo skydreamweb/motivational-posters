@@ -48,7 +48,6 @@ export default {
             subtitle: this.subtitle
         }
         const returnedTarget = Object.assign(img, motivation);
-        
         // push image in state to array
         this.images.push(returnedTarget);
 

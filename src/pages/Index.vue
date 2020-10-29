@@ -12,7 +12,7 @@
         <img :src="img.src" @click="selectImageHandler(img)" />
         <div class="button">
         <button @click="deleteImage(img)" class="" separator >Delete</button>
-        <button @click="addImage(img)">Add</button>
+        <button @click="addImage(img)">Create Poster</button>
         </div>
       </div>
     </div>
