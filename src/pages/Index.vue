@@ -58,7 +58,7 @@ export default {
       reader.addEventListener("load", () => {
         // Create unique name and id
         let imageId = 0;
-        let images = JSON.parse(localStorage.getItem("images"));
+        let images = JSON.parse(this.$q.localStorage.getItem("images"));
 
         // random number for id
         if (images && images.length > 0) {
@@ -69,7 +69,7 @@ export default {
         this.images.push({ imageId, src: reader.result });
 
         // place array in localstorage
-        localStorage.setItem("images", JSON.stringify(this.images));
+        this.$q.localStorage.set("images", JSON.stringify(this.images));
       });
       reader.readAsDataURL(event.target.files[0]);
     },
@@ -89,15 +89,15 @@ export default {
         this.images = this.images.filter(image => image.imageId !== imageId);
 
         // update localstorage
-        localStorage.removeItem("images");
-        localStorage.setItem("images", JSON.stringify(this.images));
+        this.$q.localStorage.remove("images");
+        this.$q.localStorage.set("images", JSON.stringify(this.images));
       }
     }
   },
   mounted() {
     // load data from localstorage after reload component
-    let images = JSON.parse(localStorage.getItem("images"))
-      ? JSON.parse(localStorage.getItem("images"))
+    let images = JSON.parse(this.q$.localStorage.getItem("images"))
+      ? JSON.parse(this.$q.localStorage.getItem("images"))
       : [];
     if (images.length > 0) {
       this.images = images;
