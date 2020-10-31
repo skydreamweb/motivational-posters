@@ -1,18 +1,34 @@
 <template>
   <q-page class="flex">
     <div class="poster">
-    <poster-creator :image-poster="this.singleImage"></poster-creator>
+      <poster-creator :image-poster="this.singleImage"></poster-creator>
     </div>
     <div class="upload">
-    <h3>Please upload your image</h3>
-    <input type="file" @change="fileUpload" />
+      <h3>Please upload your image</h3>
+      <input type="file" @change="fileUpload" />
     </div>
     <div class="container row">
       <div v-for="img in images" :key="img.id" class="images col-3">
         <img :src="img.src" @click="selectImageHandler(img)" />
         <div class="button">
-        <button @click="deleteImage(img)" class="" separator >Delete</button>
-        <button @click="addImage(img)">Create Poster</button>
+          <q-btn
+            class="q-mx-xs"
+            @click="deleteImage(img)"
+            separator
+            rounded
+            color="red"
+            icon-right="delete"
+            label="Delete"
+          />
+          <q-btn
+            class="q-mx-xs"
+            color="secondary"
+            icon-right="add"
+            separator
+            rounded
+            label="Add"
+            @click="addImage(img)"
+          />
         </div>
       </div>
     </div>
@@ -21,7 +37,7 @@
 </template>
 
 <script>
-import PosterCreator from '../components/PosterCreator'
+import PosterCreator from "../components/PosterCreator";
 export default {
   name: "PageIndex",
   data() {
@@ -55,9 +71,9 @@ export default {
       });
       reader.readAsDataURL(event.target.files[0]);
     },
-    addImage(img){
+    addImage(img) {
       console.log(img);
-       this.singleImage = img;
+      this.singleImage = img;
     },
     // get info about image on click
     selectImageHandler(img) {
@@ -97,7 +113,6 @@ export default {
 </script>
 
 <style scoped>
-
 .buttons {
   display: inline;
 }
@@ -111,11 +126,13 @@ export default {
   margin: 3rem auto;
 }
 .images {
-  display: block;
+  display: flex;
+  height: auto;
+  align-items: center;
+  border-radius: 40px;
   border: 1px solid black;
   padding: 15px;
   position: relative;
-  height: auto;
 }
 .q-page {
   max-width: 1100px;
@@ -127,7 +144,7 @@ img {
 .button {
   position: absolute;
   z-index: 999;
-  left: 0;
-  bottom: 0;
+  left: 25px;
+  bottom: 10px;
 }
 </style>

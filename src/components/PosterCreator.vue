@@ -2,7 +2,7 @@
   <div>
     <h1>Create poster</h1>
     <div class="box">
-      <img :src="imagePoster.src" alt="" />
+      <img :src="imagePoster?imagePoster.src:''" alt="" />
     </div>
     <div class="lable">
       <label for="checkbox">{{ title }}</label>
@@ -18,21 +18,21 @@
         v-model="subtitle"
       />
       <button @click="savePoster(imagePoster)">Save poster</button>
-       <q-dialog v-model="noActive">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Done</div>
-        </q-card-section>
+      <q-dialog v-model="noActive">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Done</div>
+          </q-card-section>
 
-        <q-card-section class="q-pt-none">
-           Poster has been created!
-        </q-card-section>
+          <q-card-section class="q-pt-none">
+            Poster has been created!
+          </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+          <q-card-actions align="right">
+            <q-btn flat label="OK" color="primary" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </div>
   </div>
 </template>
