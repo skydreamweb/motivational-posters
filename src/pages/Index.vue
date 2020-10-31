@@ -67,7 +67,7 @@ export default {
         this.images.push({ id, name, src: reader.result });
 
         // place array in localstorage
-        this.$q.localStorage.setItem("images", JSON.stringify(this.images));
+        this.$q.localStorage.set("images", JSON.stringify(this.images));
       });
       reader.readAsDataURL(event.target.files[0]);
     },
@@ -83,7 +83,7 @@ export default {
     // delete image
     deleteImage(img) {
       // colect "images" key from localstorage
-      let imagesToDelete = JSON.parse(localStorage.getItem("images"));
+      let imagesToDelete = JSON.parse(this.$q.localStorage.getItem("images"));
 
       // filter array & remove clicked
       var filteredImages = imagesToDelete.filter(
@@ -94,14 +94,14 @@ export default {
       this.images = filteredImages;
 
       // place filtered array to localstorage
-      localStorage.setItem("images", JSON.stringify(filteredImages));
+      this.$q.localStorage.set("images", JSON.stringify(filteredImages));
     }
   },
   created() {
     // load data from localstorage after reload component
     let images = [];
-    images = JSON.parse(localStorage.getItem("images"))
-      ? JSON.parse(localStorage.getItem("images"))
+    images = JSON.parse(this.$q.localStorage.getItem("images"))
+      ? JSON.parse(this.$q.localStorage.getItem("images"))
       : [];
     if (images.length > 0) {
       images.forEach(image => {
