@@ -1,7 +1,10 @@
 <template>
   <q-page class="flex">
     <div class="poster">
-      <poster-creator :image-poster="this.singleImage"></poster-creator>
+      <poster-creator
+        v-if="this.singleImage"
+        :image-poster="this.singleImage"
+      ></poster-creator>
     </div>
     <div class="upload">
       <h3>Please upload your image</h3>

@@ -2,40 +2,36 @@
   <div class="albums">
     <h1>Create albums</h1>
     <div>
-      <input type="text" v-model="albumName" />
+      <input type="text" placeholder="Enter album name" v-model="albumName" />
       <button @click="createAlbumHandler">Create album</button>
-    </div>
-    <div>
-      <div class="row inline">
-        <button @click="deleteAlbumHandler">Delete album</button>
-      </div>
-      <div>
-        <button @click="addPostersHandler">Add posters to album</button>
-      </div>
     </div>
     <q-list class="flex" bordered padding>
       <q-separator spaced />
 
-      <q-item v-ripple v-for="album in albums" :key="album.albumId">
-        <q-item-section side top>
-          <q-checkbox
-            indeterminate-value="false"
-            v-model="check"
-            :val="album"
-            :check="album"
-            :checked="checked"
-          />
-        </q-item-section>
+      <template v-if="albums.length > 0">
+        <q-item v-ripple v-for="album in albums" :key="album.albumId">
+          <q-item-section side top>
+            <button @click="deleteAlbumHandler(album.albumId)">Delete</button>
+          </q-item-section>
 
-        <q-item-section>
-          <q-item-label>{{ album.name }}</q-item-label>
-        </q-item-section>
-      </q-item>
+          <q-item-section>
+            <q-item-label>{{ album.name }}</q-item-label>
+          </q-item-section>
+        </q-item></template
+      >
+      <q-item v-else>No albums found.</q-item>
 
       <q-separator spaced />
     </q-list>
     <q-separator spaced />
-    <list-posters v-on:posterChecked="posterCheckedHandler"></list-posters>
+    <list-posters
+      :checkedIds="
+        selectedPosters.length > 0
+          ? selectedPosters.map(poster => poster.posterId)
+          : []
+      "
+      v-on:posterChecked="posterCheckedHandler"
+    ></list-posters>
   </div>
 </template>
 
@@ -48,12 +44,8 @@ export default {
   },
   data() {
     return {
-      id: "",
-      val: "",
       albums: [],
       albumName: "",
-      check: [],
-      checked: false,
       selectedPosters: []
     };
   },
@@ -64,7 +56,7 @@ export default {
     },
     createAlbumHandler() {
       if (this.selectedPosters.length === 0) {
-        alert("Please select posters!");
+        alert("Please select posters first!");
         return;
       }
       // set unique album id
@@ -90,45 +82,18 @@ export default {
       localStorage.setItem("albums", JSON.stringify(this.albums));
 
       // reset data
-      this.selectedPosters = []
-      
+      this.selectedPosters = [];
+      this.albumName = "";
     },
-    addPostersHandler() {
-      console.log(this.selectedPosters);
-    },
-    posterCheck(img) {
-      let vm = this;
-      console.log("this is img", img);
-      let filterCh = this.postersChecked;
-      let compare = img;
-      filterCh.forEach(image => {
-        console.log("this is image ", image);
-        if (image == compare) {
-          return;
-        } else {
-          console.log("Nema ga");
-          console.log(img);
-          vm.postersChecked.push(img);
-        }
-      });
+    deleteAlbumHandler(albumId) {
+      if (confirm("Are you sure that you want to delete selected album/s?")) {
+        // remove selected albums
+        this.albums = this.albums.filter(album => album.albumId !== albumId);
 
-      console.log(this.postersChecked);
-    },
-
-    deleteAlbumHandler() {
-      // colect "albums" key from localstorage
-      let albumsToDelete = JSON.parse(localStorage.getItem("albums"));
-      let toDelete = this.check;
-
-      // filter to arrays of objects
-      const results = albumsToDelete.filter(
-        ({ id: id1 }) => !toDelete.some(({ id: id2 }) => id2 === id1)
-      );
-      // reset checked albums
-      this.check = [];
-      this.albums = results;
-
-      localStorage.setItem("albums", JSON.stringify(results));
+        // update in localstorage
+        localStorage.removeItem("albums");
+        localStorage.setItem("albums", JSON.stringify(this.albums));
+      }
     }
   },
   mounted() {

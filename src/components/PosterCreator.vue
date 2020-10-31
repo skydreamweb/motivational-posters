@@ -59,6 +59,9 @@ export default {
   },
   methods: {
     savePoster(img) {
+      if (!img) {
+        return alert("Please select image first!");
+      }
       // set unique poster id
       let posterId = 0;
       let posters = JSON.parse(localStorage.getItem("posters"))
@@ -68,7 +71,7 @@ export default {
       if (posters && posters.length > 0) {
         posterId = Number(posters[posters.length - 1].posterId) + 1;
       }
-
+      console.log(img);
       const poster = {
         posterId,
         title: this.title,

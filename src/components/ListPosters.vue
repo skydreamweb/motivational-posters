@@ -10,7 +10,7 @@
           >
             <q-checkbox
               indeterminate-value="false"
-              v-model="checkedIds"
+              v-model="checkedPosterIds"
               :val="poster.posterId"
               @click.native="checkHandler()"
             />
@@ -44,22 +44,18 @@
 <script>
 export default {
   name: "ListPosters",
+  props: ["checkedIds"],
   data() {
     return {
       posters: [],
-      // title: "",
-      // subtitle: "",
-      // images: [],
-      // src: "",
-      // checked: false,
-      checkedIds: []
+      checkedPosterIds: []
     };
   },
   methods: {
     checkHandler() {
-      console.log(this.checkedIds);
+      console.log(this.checkedPosterIds);
       let selectedImages = this.posters.filter(poster =>
-        this.checkedIds.includes(poster.posterId)
+        this.checkedPosterIds.includes(poster.posterId)
       );
       // send all checked posters
       this.$emit("posterChecked", selectedImages);
@@ -82,6 +78,11 @@ export default {
       posters.forEach(poster => {
         this.posters = posters;
       });
+    }
+  },
+  watch: {
+    checkedIds() {
+      this.checkedPosterIds = this.checkedIds;
     }
   }
 };
