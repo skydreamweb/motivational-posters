@@ -58,7 +58,7 @@ export default {
       reader.addEventListener("load", () => {
         // Create unique name and id
         let imageId = 0;
-        let images = JSON.parse(this.$q.localStorage.getItem("images"));
+        let images = JSON.parse(localStorage.getItem("images"));
 
         // random number for id
         if (images && images.length > 0) {
@@ -69,7 +69,7 @@ export default {
         this.images.push({ imageId, src: reader.result });
 
         // place array in localstorage
-        this.$q.localStorage.set("images", JSON.stringify(this.images));
+        localStorage.set("images", JSON.stringify(this.images));
       });
       reader.readAsDataURL(event.target.files[0]);
     },
