@@ -93,7 +93,7 @@ export default {
       this.images = [];
 
       // go to create album page
-      localStorage.setItem(this.$router.push("/create"));
+      this.$router.push("/create");
     }
   }
 };
