@@ -96,8 +96,8 @@ export default {
   },
   mounted() {
     // load data from localstorage after reload component
-    let images = JSON.parse(this.q$.localStorage.getItem("images"))
-      ? JSON.parse(this.$q.localStorage.getItem("images"))
+    let images = JSON.parse(localStorage.getItem("images"))
+      ? JSON.parse(localStorage.getItem("images"))
       : [];
     if (images.length > 0) {
       this.images = images;
