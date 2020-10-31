@@ -15,7 +15,7 @@
         <div class="button">
           <q-btn
             class="q-mx-xs"
-            @click="deleteImage(img.imageId)"
+            @click="deleteImageHandler(img.imageId)"
             separator
             rounded
             color="red"
@@ -83,7 +83,7 @@ export default {
     },
 
     // delete image
-    deleteImage(imageId) {
+    deleteImageHandler(imageId) {
       if (confirm("Are you sure that you want to delete this image?")) {
         // update images
         this.images = this.images.filter(image => image.imageId !== imageId);
