@@ -126,5 +126,6 @@ export default {
 }
 .lable {
   position: absolute;
+  display: grid;
 }
 </style>

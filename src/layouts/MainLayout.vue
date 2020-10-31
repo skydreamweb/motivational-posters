@@ -51,12 +51,12 @@ import EssentialLink from 'components/EssentialLink.vue'
 const linksData = [
   {
     title: 'All Images',
-    caption: 'Collection of images',
+    caption: 'Create New Poster',
     icon: 'photo',
     link: '/'
   },
   {
-    title: 'Create Albums',
+    title: 'All Posters',
     caption: 'Add New Poster',
     icon: 'face',
     link: '/create'

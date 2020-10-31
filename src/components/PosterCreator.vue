@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Create poster</h1>
     <div class="box">
       <img :src="imagePoster.src" alt="" />
     </div>
@@ -17,6 +18,21 @@
         v-model="subtitle"
       />
       <button @click="savePoster(imagePoster)">Save poster</button>
+       <q-dialog v-model="noActive">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Done</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+           Poster has been created!
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     </div>
   </div>
 </template>
@@ -26,6 +42,7 @@ export default {
   name: "PosterCreator",
   data() {
     return {
+      noActive: false,
       title: "",
       subtitle: "",
       images: [],
@@ -53,6 +70,7 @@ export default {
       console.log(this.images);
       // place array in localstorage
       localStorage.setItem("posters", JSON.stringify(this.images));
+      this.noActive = true;
     }
   }
 };
