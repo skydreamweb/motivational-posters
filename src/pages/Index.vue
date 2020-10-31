@@ -69,7 +69,7 @@ export default {
         this.images.push({ imageId, src: reader.result });
 
         // place array in localstorage
-        localStorage.set("images", JSON.stringify(this.images));
+        localStorage.setItem("images", JSON.stringify(this.images));
       });
       reader.readAsDataURL(event.target.files[0]);
     },
@@ -89,8 +89,8 @@ export default {
         this.images = this.images.filter(image => image.imageId !== imageId);
 
         // update localstorage
-        this.$q.localStorage.remove("images");
-        this.$q.localStorage.set("images", JSON.stringify(this.images));
+        localStorage.removeItem("images");
+        localStorage.setItem("images", JSON.stringify(this.images));
       }
     }
   },
