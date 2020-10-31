@@ -2,14 +2,16 @@
   <q-page class="flex">
     <div class="poster">
       <poster-creator
-        v-if="this.singleImage"
-        :image-poster="this.singleImage"
+        v-if="singleImage"
+        :image-poster="singleImage"
       ></poster-creator>
     </div>
     <div class="upload">
       <h3>Please upload your image</h3>
+
       <input type="file" @change="fileUpload" />
     </div>
+
     <div class="container row">
       <div v-for="img in images" :key="img.imageId" class="images col-3">
         <img :src="img.src" @click="selectImageHandler(img)" />
