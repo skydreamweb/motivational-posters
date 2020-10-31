@@ -89,8 +89,8 @@ export default {
         this.images = this.images.filter(image => image.imageId !== imageId);
 
         // update localstorage
-        this.$q.localStorage.remove("images");
-        this.$q.localStorage.setItem("images", JSON.stringify(this.images));
+        localStorage.removeItem("images");
+        localStorage.setItem("images", JSON.stringify(this.images));
       }
     }
   },
