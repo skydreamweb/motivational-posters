@@ -8,11 +8,6 @@
             :key="album.albumId"
             class="albums col-3 albums-list"
           >
-            <q-checkbox
-              indeterminate-value="false"
-              v-model="checkedPosterIds"
-              :val="album.albumId"
-            />
             
             <div class="inner">
               <div>
@@ -63,9 +58,9 @@
             </q-list>
             <!-- End posters -->
 
-            <div class="text">
+            <div class="text" >
               <div class="button">
-                <button class="" separator>
+                <button class="" separator @click="deleteAlbumHandler(album.albumId)">
                   Delete
                 </button>
               </div>
@@ -107,6 +102,16 @@ export default {
       // save change to local storage
       localStorage.removeItem("posters");
       localStorage.setItem("posters", JSON.stringify(this.posters));
+    },
+        deleteAlbumHandler(albumId) {
+      if (confirm("Are you sure that you want to delete selected album/s?")) {
+        // remove selected albums
+        this.albums = this.albums.filter(album => album.albumId !== albumId);
+
+        // update in localstorage
+        localStorage.removeItem("albums");
+        localStorage.setItem("albums", JSON.stringify(this.albums));
+      }
     }
   },
   mounted() {
