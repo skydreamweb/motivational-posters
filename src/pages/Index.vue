@@ -1,9 +1,7 @@
 <template>
   <q-page class="flex">
     <div class="poster">
-      <poster-creator
-        :image-poster="singleImage"
-      ></poster-creator>
+      <poster-creator :image-poster="singleImage"></poster-creator>
     </div>
     <div class="upload">
       <h3>Please upload your image</h3>
@@ -85,19 +83,14 @@ export default {
 
     // delete image
     deleteImage(imageId) {
-      // colect "images" key from localstorage
-      let imagesToDelete = JSON.parse(localStorage.getItem("images"));
+      if (confirm("Are you sure that you want to delete this image?")) {
+        // update images
+        this.images = this.images.filter(image => image.imageId !== imageId);
 
-      // filter array & remove clicked
-      var filteredImages = imagesToDelete.filter(
-        element => element.id != imageId
-      );
-
-      // place new filtered array to state
-      this.images = filteredImages;
-
-      // place filtered array to localstorage
-      localStorage.setItem("images", JSON.stringify(filteredImages));
+        // update localstorage
+        localStorage.removeItem("images");
+        localStorage.setItem("images", JSON.stringify(this.images));
+      }
     }
   },
   mounted() {
