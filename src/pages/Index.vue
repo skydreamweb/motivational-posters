@@ -2,7 +2,6 @@
   <q-page class="flex">
     <div class="poster">
       <poster-creator
-        v-if="singleImage"
         :image-poster="singleImage"
       ></poster-creator>
     </div>
