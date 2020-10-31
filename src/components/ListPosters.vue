@@ -4,31 +4,32 @@
       <q-item v-ripple>
         <div class="container row">
           <div
-            v-for="img in images"
-            :key="img.id"
+            v-for="poster in posters"
+            :key="poster.posterId"
             class="images col-3 poster-list"
           >
             <q-checkbox
               indeterminate-value="false"
               v-model="checkedIds"
-              :checked="checked"
-              :val="img.id"
-              :check="img"
-              @click.native="status()"
+              :val="poster.posterId"
+              @click.native="checkHandler()"
             />
             <div class="inner">
-              <img :src="img.src" @click="selectImageHandler(img)" />
+              <img :src="poster.imgSrc" />
               <div class="lable">
-                <label for="checkbox">{{ img.title }}</label>
-                <label for="checkbox">{{ img.subtitle }}</label>
+                <label>{{ poster.title }}</label>
+                <label>{{ poster.subtitle }}</label>
               </div>
             </div>
             <div class="text">
               <div class="button">
-                <button @click="deleteImage(img)" class="" separator>
+                <button
+                  @click="deletePosterHandler(poster.posterId)"
+                  class=""
+                  separator
+                >
                   Delete
                 </button>
-                
               </div>
             </div>
           </div>
@@ -45,63 +46,41 @@ export default {
   name: "ListPosters",
   data() {
     return {
-      title: "",
-      subtitle: "",
-      images: [],
-      src: "",
-      checked: false,
-      checkedIds: [],
+      posters: [],
+      // title: "",
+      // subtitle: "",
+      // images: [],
+      // src: "",
+      // checked: false,
+      checkedIds: []
     };
   },
   methods: {
-   status() {
-      let selectedImages = this.images.filter(image =>
-        this.checkedIds.includes(image.id)
+    checkHandler() {
+      console.log(this.checkedIds);
+      let selectedImages = this.posters.filter(poster =>
+        this.checkedIds.includes(poster.posterId)
       );
-      console.log(selectedImages);
-      this.$emit("postersChecked", selectedImages);
+      // send all checked posters
+      this.$emit("posterChecked", selectedImages);
     },
-    // get info about image on click
-    selectImageHandler(img) {
-      console.log(img);
-    },
-    addPoster(img) {
-      console.log(img);
-      let motivation = {
-        title: this.title,
-        subtitle: this.subtitle
-      };
-      const returnedTarget = Object.assign(img, motivation);
-      // push image in state to array
-      this.images.push(returnedTarget);
-
-      // place array in localstorage
-      localStorage.setItem("posters", JSON.stringify(this.images));
-    },
-    deleteImage(img) {
-      // colect "images" key from localstorage
-      let imagesToDelete = JSON.parse(localStorage.getItem("posters"));
-
-      // filter array & remove clicked
-      var filteredImages = imagesToDelete.filter(
-        element => element.id != img.id
+    deletePosterHandler(posterId) {
+      // remove poster
+      this.posters = this.posters.filter(
+        poster => poster.posterId !== posterId
       );
-
-      // place new filtered array to state
-      this.images = filteredImages;
-
-      // place filtered array to localstorage
-      localStorage.setItem("posters", JSON.stringify(filteredImages));
+      // save change to local storage
+      localStorage.removeItem("posters");
+      localStorage.setItem("posters", JSON.stringify(this.posters));
     }
   },
-  created() {
-    let posters = [];
-    posters = JSON.parse(localStorage.getItem("posters"))
+  mounted() {
+    let posters = JSON.parse(localStorage.getItem("posters"))
       ? JSON.parse(localStorage.getItem("posters"))
       : [];
     if (posters.length > 0) {
-      posters.forEach(image => {
-        this.images.push(image);
+      posters.forEach(poster => {
+        this.posters = posters;
       });
     }
   }

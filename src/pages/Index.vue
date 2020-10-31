@@ -8,12 +8,12 @@
       <input type="file" @change="fileUpload" />
     </div>
     <div class="container row">
-      <div v-for="img in images" :key="img.id" class="images col-3">
+      <div v-for="img in images" :key="img.imageId" class="images col-3">
         <img :src="img.src" @click="selectImageHandler(img)" />
         <div class="button">
           <q-btn
             class="q-mx-xs"
-            @click="deleteImage(img)"
+            @click="deleteImage(img.imageId)"
             separator
             rounded
             color="red"
@@ -53,21 +53,20 @@ export default {
     fileUpload(event) {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
-        // Create unique name
-        let id = 0;
-        let images = JSON.parse(this.$q.localStorage.getItem("images"));
+        // Create unique name and id
+        let imageId = 0;
+        let images = JSON.parse(localStorage.getItem("images"));
 
         // random number for id
         if (images && images.length > 0) {
-          id = Number(images[images.length - 1].id) + 1;
+          imgageId = Number(images[images.length - 1].imageId) + 1;
         }
-        let name = "img-" + id;
 
         // push image in state to array
-        this.images.push({ id, name, src: reader.result });
+        this.images.push({ imageId, src: reader.result });
 
         // place array in localstorage
-        this.$q.localStorage.set("images", JSON.stringify(this.images));
+        localStorage.setItem("images", JSON.stringify(this.images));
       });
       reader.readAsDataURL(event.target.files[0]);
     },
@@ -81,32 +80,29 @@ export default {
     },
 
     // delete image
-    deleteImage(img) {
+    deleteImage(imageId) {
       // colect "images" key from localstorage
-      let imagesToDelete = JSON.parse(this.$q.localStorage.getItem("images"));
+      let imagesToDelete = JSON.parse(localStorage.getItem("images"));
 
       // filter array & remove clicked
       var filteredImages = imagesToDelete.filter(
-        element => element.id != img.id
+        element => element.id != imageId
       );
 
       // place new filtered array to state
       this.images = filteredImages;
 
       // place filtered array to localstorage
-      this.$q.localStorage.set("images", JSON.stringify(filteredImages));
+      localStorage.setItem("images", JSON.stringify(filteredImages));
     }
   },
-  created() {
+  mounted() {
     // load data from localstorage after reload component
-    let images = [];
-    images = JSON.parse(this.$q.localStorage.getItem("images"))
-      ? JSON.parse(this.$q.localStorage.getItem("images"))
+    let images = JSON.parse(localStorage.getItem("images"))
+      ? JSON.parse(localStorage.getItem("images"))
       : [];
     if (images.length > 0) {
-      images.forEach(image => {
-        this.images.push(image);
-      });
+      this.images = images;
     }
   }
 };

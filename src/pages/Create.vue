@@ -3,20 +3,20 @@
     <h1>Create albums</h1>
     <div>
       <input type="text" v-model="albumName" />
-      <button @click="createAlbum">Create album</button>
+      <button @click="createAlbumHandler">Create album</button>
     </div>
     <div>
       <div class="row inline">
-        <button @click="deleteAlbums">Delete album</button>
+        <button @click="deleteAlbumHandler">Delete album</button>
       </div>
       <div>
-        <button @click="addPoster">Add poster to album</button>
+        <button @click="addPostersHandler">Add posters to album</button>
       </div>
     </div>
     <q-list class="flex" bordered padding>
       <q-separator spaced />
 
-      <q-item v-ripple v-for="album in albums" :key="album.id">
+      <q-item v-ripple v-for="album in albums" :key="album.albumId">
         <q-item-section side top>
           <q-checkbox
             indeterminate-value="false"
@@ -35,7 +35,7 @@
       <q-separator spaced />
     </q-list>
     <q-separator spaced />
-    <list-posters v-on:postersChecked="hello"></list-posters>
+    <list-posters v-on:posterChecked="posterCheckedHandler"></list-posters>
   </div>
 </template>
 
@@ -54,15 +54,46 @@ export default {
       albumName: "",
       check: [],
       checked: false,
-      selectedPosters: null
+      selectedPosters: []
     };
   },
   methods: {
-    hello(postersCheck) {
-      this.selectedPosters = postersCheck;
-      console.log(postersCheck);
+    posterCheckedHandler(checkedPosters) {
+      this.selectedPosters = checkedPosters;
+      console.log(checkedPosters);
     },
-    addPoster() {
+    createAlbumHandler() {
+      if (this.selectedPosters.length === 0) {
+        alert("Please select posters!");
+        return;
+      }
+      // set unique album id
+      let albumId = 0;
+      let albums = JSON.parse(localStorage.getItem("albums"))
+        ? JSON.parse(localStorage.getItem("albums"))
+        : [];
+      if (albums && albums.length > 0) {
+        albumId = Number(albums[albums.length - 1].albumId) + 1;
+      }
+
+      // create new album
+      const album = {
+        albumId,
+        name: this.albumName,
+        posters: this.selectedPosters
+      };
+
+      this.albums.push(album);
+
+      // update in localstorage
+      localStorage.removeItem("albums");
+      localStorage.setItem("albums", JSON.stringify(this.albums));
+
+      // reset data
+      this.selectedPosters = []
+      
+    },
+    addPostersHandler() {
       console.log(this.selectedPosters);
     },
     posterCheck(img) {
@@ -83,23 +114,8 @@ export default {
 
       console.log(this.postersChecked);
     },
-    createAlbum() {
-      console.log(this.postersChecked);
-      let id = 0;
-      let allAlbums = JSON.parse(localStorage.getItem("albums"));
 
-      // random number for id
-      if (allAlbums && allAlbums.length > 0) {
-        id = Number(allAlbums[allAlbums.length - 1].id) + 1;
-      }
-      let name = this.albumName;
-      let checked = this.checked;
-      this.albums.push({ id, name, checked });
-      console.log(this.albums);
-      localStorage.setItem("albums", JSON.stringify(this.albums));
-    },
-
-    deleteAlbums() {
+    deleteAlbumHandler() {
       // colect "albums" key from localstorage
       let albumsToDelete = JSON.parse(localStorage.getItem("albums"));
       let toDelete = this.check;
@@ -115,16 +131,13 @@ export default {
       localStorage.setItem("albums", JSON.stringify(results));
     }
   },
-  created() {
-    let albums = [];
-    albums = JSON.parse(localStorage.getItem("albums"))
+  mounted() {
+    let albums = JSON.parse(localStorage.getItem("albums"))
       ? JSON.parse(localStorage.getItem("albums"))
       : [];
 
     if (albums.length > 0) {
-      albums.forEach(album => {
-        this.albums.push(album);
-      });
+      this.albums = albums;
     }
   }
 };

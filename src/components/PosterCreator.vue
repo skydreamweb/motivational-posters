@@ -2,7 +2,7 @@
   <div>
     <h1>Create poster</h1>
     <div class="box">
-      <img :src="imagePoster?imagePoster.src:''" alt="" />
+      <img :src="imagePoster ? imagePoster.src : ''" alt="" />
     </div>
     <div class="lable">
       <label for="checkbox">{{ title }}</label>
@@ -59,18 +59,38 @@ export default {
   },
   methods: {
     savePoster(img) {
-      let motivation = {
-        title: this.title,
-        subtitle: this.subtitle
-      };
-      const returnedTarget = Object.assign(img, motivation);
-      // push image in state to array
-      this.images.push(returnedTarget);
+      // set unique poster id
+      let posterId = 0;
+      let posters = JSON.parse(localStorage.getItem("posters"))
+        ? JSON.parse(localStorage.getItem("posters"))
+        : [];
 
-      console.log(this.images);
-      // place array in localstorage
-      localStorage.setItem("posters", JSON.stringify(this.images));
+      if (posters && posters.length > 0) {
+        posterId = Number(posters[posters.length - 1].posterId) + 1;
+      }
+
+      const poster = {
+        posterId,
+        title: this.title,
+        subtitle: this.subtitle,
+        imageId: img.imageId,
+        imgSrc: img.src
+      };
+
+      posters.push(poster);
+
+      // save posters in localStorage
+      localStorage.setItem("posters", JSON.stringify(posters));
+
       this.noActive = true;
+
+      // reset data
+      this.title = "";
+      this.subtitle = "";
+      this.images = [];
+
+      // go to create album page
+      this.$router.push("/create");
     }
   }
 };
