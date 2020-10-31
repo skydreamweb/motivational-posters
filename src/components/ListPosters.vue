@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-list class="flex" bordered padding>
-      <q-item v-ripple>
+      <q-item v-ripple v-if="posters.length > 0">
         <div class="container row">
           <div
             v-for="poster in posters"
@@ -35,6 +35,7 @@
           </div>
         </div>
       </q-item>
+      <q-item v-else>No posters found</q-item>
 
       <q-separator spaced />
     </q-list>
