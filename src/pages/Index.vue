@@ -39,6 +39,7 @@
 </template>
 
 <script>
+// comment
 import PosterCreator from "../components/PosterCreator";
 export default {
   name: "PageIndex",
