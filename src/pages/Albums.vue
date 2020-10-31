@@ -8,20 +8,29 @@
             :key="album.albumId"
             class="albums col-3 albums-list"
           >
-            
             <div class="inner">
               <div>
-                <h3>Album name: {{ album.name }}</h3>
+                <h3>
+                  Album name: <span v-if="!isEditName">{{ album.name }}</span
+                  ><span v-else><input type="text" v-model="album.name"/></span>
+                </h3>
+
+                <button v-if="!isEditName" @click="isEditName = !isEditName">
+                  Edit album name
+                </button>
+                <button v-else @click="editNameHandler">
+                  Save Album Name
+                </button>
               </div>
             </div>
 
             <!-- Posters -->
             <h3>Posters list</h3>
             <q-list class="flex" bordered padding>
-              <q-item v-ripple v-if="posters.length > 0">
+              <q-item v-ripple v-if="album.posters.length > 0">
                 <div class="container row">
                   <div
-                    v-for="poster in posters"
+                    v-for="poster in album.posters"
                     :key="poster.posterId"
                     class="images col-3 poster-list"
                   >
@@ -41,7 +50,14 @@
                     <div class="text">
                       <div class="button">
                         <button
-                          @click="deletePosterHandler(poster.posterId)"
+                          class=""
+                          separator
+                          @click="editPosterHandler(album.albumId)"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          @click="deletePosterHandler(album, poster.posterId)"
                           class=""
                           separator
                         >
@@ -58,9 +74,13 @@
             </q-list>
             <!-- End posters -->
 
-            <div class="text" >
+            <div class="text">
               <div class="button">
-                <button class="" separator @click="deleteAlbumHandler(album.albumId)">
+                <button
+                  class=""
+                  separator
+                  @click="deleteAlbumHandler(album.albumId)"
+                >
                   Delete
                 </button>
               </div>
@@ -82,10 +102,16 @@ export default {
     return {
       albums: [],
       posters: [],
-      checkedPosterIds: []
+      checkedPosterIds: [],
+      isEditName: false
     };
   },
   methods: {
+    editNameHandler() {
+      localStorage.removeItem("albums");
+      localStorage.setItem("albums", JSON.stringify(this.albums));
+      this.isEditName = !this.isEditName;
+    },
     checkHandler() {
       console.log(this.checkedPosterIds);
       let selectedImages = this.posters.filter(poster =>
@@ -94,16 +120,8 @@ export default {
       // send all checked posters
       this.$emit("posterChecked", selectedImages);
     },
-    deletePosterHandler(posterId) {
-      // remove poster
-      this.posters = this.posters.filter(
-        poster => poster.posterId !== posterId
-      );
-      // save change to local storage
-      localStorage.removeItem("posters");
-      localStorage.setItem("posters", JSON.stringify(this.posters));
-    },
-        deleteAlbumHandler(albumId) {
+
+    deleteAlbumHandler(albumId) {
       if (confirm("Are you sure that you want to delete selected album/s?")) {
         // remove selected albums
         this.albums = this.albums.filter(album => album.albumId !== albumId);
@@ -112,6 +130,30 @@ export default {
         localStorage.removeItem("albums");
         localStorage.setItem("albums", JSON.stringify(this.albums));
       }
+    },
+    deletePosterHandler(album, posterId) {
+      if (
+        confirm(
+          `Are you sure that you want to remove this poster from ${album.name}?`
+        )
+      ) {
+        // remove poster
+        this.albums.forEach(album => {
+          if (album.albumId === album.albumId) {
+            album.posters = album.posters.filter(
+              poster => poster.posterId !== posterId
+            );
+          }
+        });
+        console.log(this.albums);
+
+        // save change to local storage
+        localStorage.removeItem("albums");
+        localStorage.setItem("albums", JSON.stringify(this.albums));
+      }
+    },
+    editPosterHandler(posterId) {
+      this.$router.push({ name: "edit-poster", params: { posterId } });
     }
   },
   mounted() {

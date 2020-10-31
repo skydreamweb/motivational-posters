@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Create poster</h1>
+    <h1>{{ editPoster ? "Edit" : "Create" }} poster</h1>
     <div class="box">
       <img
         :src="
@@ -114,7 +114,7 @@ export default {
       this.images = [];
 
       // go to create album page
-      this.$router.push("/create");
+      // this.$router.push("/create");
     }
   }
 };
