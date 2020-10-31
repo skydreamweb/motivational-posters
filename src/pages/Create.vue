@@ -60,7 +60,7 @@ export default {
         return;
       }
       // set unique album id
-      let albumId = 0;
+      let albumId = 1;
       let albums = JSON.parse(localStorage.getItem("albums"))
         ? JSON.parse(localStorage.getItem("albums"))
         : [];
@@ -86,7 +86,7 @@ export default {
       this.albumName = "";
     },
     deleteAlbumHandler(albumId) {
-      if (confirm("Are you sure that you want to delete selected album/s?")) {
+      if (confirm("Are you sure that you want to delete selected album?")) {
         // remove selected albums
         this.albums = this.albums.filter(album => album.albumId !== albumId);
 

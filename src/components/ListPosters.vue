@@ -8,6 +8,7 @@
             :key="poster.posterId"
             class="images col-3 poster-list"
           >
+            <label>Select image</label>
             <q-checkbox
               indeterminate-value="false"
               v-model="checkedPosterIds"
@@ -23,6 +24,13 @@
             </div>
             <div class="text">
               <div class="button">
+                <button
+                  @click="editPosterHandler(poster.posterId)"
+                  class=""
+                  separator
+                >
+                  Edit
+                </button>
                 <button
                   @click="deletePosterHandler(poster.posterId)"
                   class=""
@@ -69,6 +77,9 @@ export default {
       // save change to local storage
       localStorage.removeItem("posters");
       localStorage.setItem("posters", JSON.stringify(this.posters));
+    },
+    editPosterHandler(posterId) {
+      this.$router.push({ name: "edit-poster", params: { posterId } });
     }
   },
   mounted() {

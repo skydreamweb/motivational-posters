@@ -42,21 +42,21 @@
 import PosterCreator from "../components/PosterCreator";
 export default {
   name: "PageIndex",
+  components: {
+    PosterCreator
+  },
   data() {
     return {
       images: [],
       singleImage: null
     };
   },
-  components: {
-    PosterCreator
-  },
   methods: {
     fileUpload(event) {
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         // Create unique name and id
-        let imageId = 0;
+        let imageId = 1;
         let images = JSON.parse(localStorage.getItem("images"));
 
         // random number for id
@@ -80,7 +80,6 @@ export default {
     selectImageHandler(img) {
       console.log(img);
     },
-
     // delete image
     deleteImageHandler(imageId) {
       if (confirm("Are you sure that you want to delete this image?")) {

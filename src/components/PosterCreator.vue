@@ -2,7 +2,12 @@
   <div>
     <h1>Create poster</h1>
     <div class="box">
-      <img :src="imagePoster ? imagePoster.src : ''" alt="" />
+      <img
+        :src="
+          editPoster ? editPoster.imgSrc : imagePoster ? imagePoster.src : ''
+        "
+        alt=""
+      />
     </div>
     <div class="lable">
       <label for="checkbox">{{ title }}</label>
@@ -17,7 +22,9 @@
         placeholder="Please enter subtitle"
         v-model="subtitle"
       />
-      <button @click="savePoster(imagePoster)">Save poster</button>
+      <button @click="submitPosterHandler(imagePoster)">
+        {{ editPoster ? "Edit" : "Save" }} poster
+      </button>
       <q-dialog v-model="noActive">
         <q-card>
           <q-card-section>
@@ -43,8 +50,8 @@ export default {
   data() {
     return {
       noActive: false,
-      title: "",
-      subtitle: "",
+      title: this.editPoster ? this.editPoster.title : "",
+      subtitle: this.editPoster ? this.editPoster.subtitle : "",
       images: [],
       src: ""
     };
@@ -52,35 +59,49 @@ export default {
   props: {
     imagePoster: {
       type: Object,
-      default: () => {
-        return {};
-      }
+      required: false
+    },
+    editPoster: {
+      type: Object,
+      required: false
     }
   },
+
   methods: {
-    savePoster(img) {
-      if (!img) {
+    submitPosterHandler(img) {
+      if (!img && !this.editPoster) {
         return alert("Please select image first!");
       }
       // set unique poster id
-      let posterId = 0;
       let posters = JSON.parse(localStorage.getItem("posters"))
         ? JSON.parse(localStorage.getItem("posters"))
         : [];
 
-      if (posters && posters.length > 0) {
-        posterId = Number(posters[posters.length - 1].posterId) + 1;
-      }
-      console.log(img);
-      const poster = {
-        posterId,
-        title: this.title,
-        subtitle: this.subtitle,
-        imageId: img.imageId,
-        imgSrc: img.src
-      };
+      // edit poster
+      if (this.editPoster) {
+        posters.forEach(poster => {
+          if (Number(poster.posterId) === Number(this.editPoster.posterId)) {
+            poster.title = this.title;
+            poster.subtitle = this.subtitle;
+          }
+        });
+      } else {
+        // add new poster
+        let posterId = 1;
 
-      posters.push(poster);
+        if (posters && posters.length > 0) {
+          posterId = Number(posters[posters.length - 1].posterId) + 1;
+        }
+        console.log(img);
+        const poster = {
+          posterId,
+          title: this.title,
+          subtitle: this.subtitle,
+          imageId: img.imageId,
+          imgSrc: img.src
+        };
+        posters.push(poster);
+      }
 
       // save posters in localStorage
       localStorage.setItem("posters", JSON.stringify(posters));
