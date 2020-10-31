@@ -62,14 +62,14 @@ export default {
 
         // random number for id
         if (images && images.length > 0) {
-          imgageId = Number(images[images.length - 1].imageId) + 1;
+          imageId = Number(images[images.length - 1].imageId) + 1;
         }
-
+        console.log(this.images);
         // push image in state to array
         this.images.push({ imageId, src: reader.result });
-
+        console.log(this.images);
         // place array in localstorage
-        localStorage.set("images", JSON.stringify(this.images));
+        localStorage.setItem("images", JSON.stringify(this.images));
       });
       reader.readAsDataURL(event.target.files[0]);
     },
@@ -90,7 +90,7 @@ export default {
 
         // update localstorage
         this.$q.localStorage.remove("images");
-        this.$q.localStorage.set("images", JSON.stringify(this.images));
+        this.$q.localStorage.setItem("images", JSON.stringify(this.images));
       }
     }
   },
